@@ -30,8 +30,8 @@ class EventListener(EventSender):
         self.channel.queue_declare(queue, exclusive=False)
 
         for binding_key in bindings:
-            self.channel.queue_bind(exchange=self.exchange_name,
-                                    queue=self.queue,
+            self.channel.queue_bind(exchange=exchange,
+                                    queue=queue,
                                     routing_key=binding_key)
 
     def register_callback(self, callback, no_ack=True):
