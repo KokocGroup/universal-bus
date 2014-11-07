@@ -1,5 +1,10 @@
 universalbus
 ===========
+Установка
+```
+pip install universalbus
+```
+
 Публикация события
 ```
 from universalbus import EventSender
