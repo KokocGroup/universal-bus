@@ -20,7 +20,10 @@ class EventSender(object):
 
     def push(self, routing_key, message):
         dumped_message = json.dumps(message)
-        self.channel.basic_publish(exchange=self.exchange, routing_key=routing_key, body=dumped_message)
+        self.push_text(routing_key, dumped_message)
+
+    def push_text(self, routing_key, message):
+        self.channel.basic_publish(exchange=self.exchange, routing_key=routing_key, body=message)
 
 
 class EventListener(EventSender):
