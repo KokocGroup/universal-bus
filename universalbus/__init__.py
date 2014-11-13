@@ -3,8 +3,13 @@ import json
 
 
 class EventSender(object):
-    def __init__(self, login, password, host, virtual_host, exchange):
+    def __init__(self, login, password, host, virtual_host, exchange, exchange_options=None):
         self.exchange = exchange
+        if not exchange_options:
+            exchange_options = {
+                'auto_delete': False,
+                'type': 'topic'
+            }
         conn_params = pika.ConnectionParameters(
             host=host,
             virtual_host=virtual_host,
@@ -13,7 +18,7 @@ class EventSender(object):
         self.connection = pika.BlockingConnection(conn_params)
 
         self.channel = self.connection.channel()
-        self.channel.exchange_declare(exchange=self.exchange, type='topic', auto_delete=False)
+        self.channel.exchange_declare(exchange=self.exchange, **exchange_options)
 
     def __del__(self):
         self.connection.close()
@@ -27,8 +32,9 @@ class EventSender(object):
 
 
 class EventListener(EventSender):
-    def __init__(self, login, password, host, virtual_host, exchange, queue, bindings):
-        super(EventListener, self).__init__(login, password, host, virtual_host, exchange)
+    def __init__(self, login, password, host, virtual_host, exchange, queue, bindings, exchange_options=None):
+        super(EventListener, self).__init__(login, password, host, virtual_host, exchange,
+                                            exchange_options=exchange_options)
         self.queue = queue
         self.channel.queue_declare(queue, exclusive=False)
 
