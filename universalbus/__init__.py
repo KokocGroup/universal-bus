@@ -23,9 +23,9 @@ class EventSender(object):
     def __del__(self):
         self.connection.close()
 
-    def push(self, routing_key, message):
+    def push(self, routing_key, message, ttl=None, all_user_connection=False):
         dumped_message = json.dumps(message)
-        self.push_text(routing_key, dumped_message)
+        self.push_text(routing_key, dumped_message, ttl, all_user_connection)
 
     def push_text(self, routing_key, message, ttl=None, all_user_connection=False):
         """
