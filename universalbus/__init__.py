@@ -27,14 +27,17 @@ class EventSender(object):
         dumped_message = json.dumps(message)
         self.push_text(routing_key, dumped_message)
 
-    def push_text(self, routing_key, message, ttl=None):
+    def push_text(self, routing_key, message, ttl=None, all_user_connection=True):
         """
         :param ttl: TTL for message in sec
         :type ttl: int
         """
-        properties = None
+        headers = {}
+        if all_user_connection:
+            headers['all_user_connection'] = all_user_connection
         if ttl:
-            properties = pika.BasicProperties(headers={'ttl': ttl*1000})
+            headers['ttl'] = ttl*1000
+        properties = pika.BasicProperties(headers=headers)
         self.channel.basic_publish(exchange=self.exchange, routing_key=routing_key, body=message, properties=properties)
 
 
