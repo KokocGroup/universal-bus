@@ -27,7 +27,7 @@ class EventSender(object):
         dumped_message = json.dumps(message)
         self.push_text(routing_key, dumped_message)
 
-    def push_text(self, routing_key, message, ttl=None, all_user_connection=True):
+    def push_text(self, routing_key, message, ttl=None, all_user_connection=False):
         """
         :param ttl: TTL for message in sec
         :type ttl: int
